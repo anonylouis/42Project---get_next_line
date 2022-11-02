@@ -6,13 +6,14 @@
 /*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:58:30 by lcalvie           #+#    #+#             */
-/*   Updated: 2022/11/02 15:39:49 by lcalvie          ###   ########.fr       */
+/*   Updated: 2022/11/02 18:34:04 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "./srcs/get_next_line.h"
 
@@ -21,7 +22,7 @@ int main(int argc, char const *argv[])
 	if (argc == 1)
 	{
 		printf("./getNextLine text1.txt text2.txt text3.txt etc...\n");
-		printf("Read simultaneously one line by one line text1.txt, text2.txt ... using the get_next_line function\n");
+		printf("Read simultaneously one line by one line text1.txt, text2.txt ... using the get_next_line function.\n");
 		return 0;
 	}
 
@@ -43,14 +44,16 @@ int main(int argc, char const *argv[])
 		finished = 1;
 		for(int i = 1; i < argc; ++i)
 		{
+			s[i - 1] = get_next_line(fd[i - 1]);
 			if (s[i - 1])
 			{
 				finished = 0;
-				free(s[i - 1]);
-				s[i - 1] = get_next_line(fd[i - 1]);
 				printf("%s", s[i - 1]);
+				free(s[i - 1]);
 			}
 		}
 	}
+	for(int i = 1; i < argc; ++i)
+		close(fd[i - 1]);
     return (0);
 }
